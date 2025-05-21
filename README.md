@@ -326,6 +326,7 @@ Upload any file (png or mp3 or mp4 or pdf)
 - Upload website from [here](https://www.free-css.com/free-css-templates/page295/applight)
 
 ![image](https://github.com/user-attachments/assets/f2077c73-f674-4a7f-83d8-d5f26323a4ac)
+
 ![image](https://github.com/user-attachments/assets/698c1686-67c9-480e-a7b0-407b4511d2e5)
 
 
@@ -592,10 +593,12 @@ Here is a comparison of the various AWS EBS volume types with respect to IOPS, T
 
 - AWS Snapshots are incremental in nature
 - Creating a disk backup manually in Azure
+
 ![image](https://github.com/user-attachments/assets/54e4c892-77a7-479a-aa7a-2ad4806aff21)
 
 
 - Azure gives incremental as well as full backup options
+
 ![image](https://github.com/user-attachments/assets/3f634a57-49e1-4d7e-8b89-0c7b65eaae9b)
 
 - Using Snapshots
@@ -668,12 +671,13 @@ sudo apt-get -y install nfs-common
 ```sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-07760194a1be46edf.efs.ap-south-1.amazonaws.com:/ /projects```
 
 - Now execute df -h
+
 ![image](https://github.com/user-attachments/assets/c3ba79d6-6dee-4327-bb6a-50db164c966c)
 
 #### EFS in new network (VPC)
 - Note: Watch classroom video for steps
--  - I will create a network and security group
-Exercise: Repeat the exact same with Redhat Instances
+- I will create a network and security group
+- Exercise: Repeat the exact same with Redhat Instances
 
 # April 8
 
@@ -839,3 +843,93 @@ Exercise: Repeat the exact same with Redhat Instances
     - Relational Databases
     - NoSQL Databases
 
+# May 20
+
+## Cloud Terminology
+
+- Public Cloud: We will be using someone else’s hardware to create our virtual infrastructure.
+- Popular Providers:
+    - AWS
+    - Azure
+    - GCP
+    - Ali Cloud
+- Private Cloud: We will be using our org’s hardware to create our virtual infrastructure.
+- Popular option:
+    - Openstack
+- Cloud offers Services:
+    - Example Services
+        - Compute
+        - Storage
+        - Databases
+        - Kubernetes
+        - AI/ML
+        - LLM Models
+        - ..
+        - ..
+- Service: What cloud offers
+- Resource: What we create
+- A service is a way to create virtual infra where you can use the resource for your business needs.
+    - you own the resource
+    - cloud service provider they own the service.
+- Resources will be charged based on usage (metered)
+- All cloud providers offer free tiers
+    -  AWS:
+        - Some services are free for 12 months
+        - Some services are free for ever
+        - some are never free.
+    - Azure:
+        - first 1 month: till 200$ of usage everything is free.
+        - post 1 month
+            - Some services are free for 12 months
+            - Some services are free for ever
+            - some are never free.
+    - GCP:
+        - first 3 months: till 300$ of usage everything is free
+        - post 3 months
+            - Some services are free for ever
+            - some are never free.
+
+### Lets create a virtual machine
+- Linux:
+    - Linux Supports two kinds of credentials
+        - password
+        - key based
+- Watch classroom recording
+
+# May 21
+
+### Nop Commerce
+- This is an open source ecommerce application
+- [link](https://www.nopcommerce.com/en?srsltid=AfmBOoqInDUQFYHL9WkV-DHUly_XpryFp6sAeyluDDnj3v-j7RTDrHyt)
+- System Components
+    - App Server
+    - Database Server
+
+![image](https://github.com/user-attachments/assets/4efa8dbe-b426-4db3-a222-4103d2827e0e)
+
+- Minimum infra required
+    - network
+    - 2 servers with ubuntu os connected to the network
+- To make this application available to public we need public ip address which is mapped to some domain
+
+![image](https://github.com/user-attachments/assets/32e7bc7d-faac-4984-b299-fd9e0758edb7)
+
+
+### How to make this work on AWS
+- We need a Network which is capable of having both public and private ip address (VPC)
+- We would need a server running mysql database (RDS)
+- We would need a server running ubuntu where we can install nop Commerce (EC2)
+- We need to configure restricted access for administration and free access over web
+
+### How to make this work on Azure
+- We need a Network which is capable of having both public and private ip address (Virtual Network)
+- We would need a server running mysql database ( Azure For mysql)
+- We would need a server running ubuntu where we can install nop Commerce (Virtual Machines)
+- We need to configure restricted access for administration and free access over web
+- [Refer Here](https://github.com/milanm/Cloud-Product-Mapping) for Service Equivalents
+
+### Realizing nop commerce in AWS
+- Create a network using vpc, we need to give private ip range 10.0.0.0/16
+- To understand the next topic, today explore
+    - Region
+        - Zones (AZ): This will have many datacenters in it
