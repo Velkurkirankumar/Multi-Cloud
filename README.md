@@ -933,3 +933,49 @@ sudo apt-get -y install nfs-common
 - To understand the next topic, today explore
     - Region
         - Zones (AZ): This will have many datacenters in it
+
+# May 22
+
+### Realizing nop commerce in AWS
+- Create a network using vpc, we need to give private ip range 10.0.0.0/16
+- To understand the next topic, [today explore](https://datacenters.microsoft.com/globe/explore/datacenter)
+    - Region
+        - Zones (AZ): This will have many datacenters in it
+- As we need to create subnets
+    - AWS: Subnet is mapped to a availability zone
+- For nop Commerce lets create two subnets
+    - app
+    - db
+- AWS: AWS used id’s over names
+- Watch recording for steps
+- We have create a network with one public and one private subnet
+- Lets create two security groups
+    - one for nop commmerce (80,5000,22)
+    - one for mysql (3306)
+- Lets create an ec2 instance in app subnet (Watch recording)
+- To connect to linux instance
+```ssh -i <path to pem> username@ipaddress```
+
+# May 24
+
+## Create mysql database in AWS
+- AWS has Relational Database as a Service option (RDS)
+- Watch classroom recording for steps
+
+### Installing nopCommerce on ubuntu
+- [Refer Here](https://docs.nopcommerce.com/en/installation-and-upgrading/installing-nopcommerce/installing-on-linux.html) for steps
+- Softwares:
+    - [.net core 9 SDK](https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet9&pivots=os-linux-ubuntu-2404)
+    - [nopCommercePackage](https://github.com/nopSolutions/nopCommerce/releases/download/release-4.80.6/nopCommerce_4.80.6_NoSource_linux_x64.zip)
+- Commands
+
+```
+sudo -i
+mkdir -p /opt/nop
+cd /opt/nop
+wget https://github.com/nopSolutions/nopCommerce/releases/download/release-4.80.6/nopCommerce_4.80.6_NoSource_linux_x64.zip
+apt install unzip -y
+unzip nopCommerce_4.80.6_NoSource_linux_x64.zip
+mkdir bin logs
+dotnet Nop.Web.dll --urls "http://0.0.0.0:5000"
+```
