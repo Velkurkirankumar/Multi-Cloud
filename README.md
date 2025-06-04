@@ -979,3 +979,192 @@ unzip nopCommerce_4.80.6_NoSource_linux_x64.zip
 mkdir bin logs
 dotnet Nop.Web.dll --urls "http://0.0.0.0:5000"
 ```
+
+# May 31
+
+## Cloudformation
+- AWS Cloudformation allows us to create infra based on a template
+- Template can be written in json/yaml format
+- JSON is a file format for representing data. JSON follows key value pair to define it structure
+```"<key>": <value>```
+- Value can be of different types
+    - text: this is generally surrounded with single or double quotes "movie": "retro" or 'movie': 'retro'
+    - numer: This is any number 'runtime': 130
+    - boolean: This has two values true or false 'theare': false
+    - list/array: this has values of any type in [] 'actors': ['surya', 'pooja']
+    - map/dictionary/object: this generally represents a complex type which requires more key value pairs to describe. This is surronded with {}
+
+```
+{
+    "name": "Multicloud",
+    "starttime": "19:00",
+    "topics": ["json", "yaml", "cf"],
+    "mode": ["online", "offline"],
+    "where": {
+        "flat": "601-A",
+        "building": "nilgiri",
+        "city": "Hyberabad"
+    }
+}
+```
+- YAML is a file format for representing data. YAML follows key value pair to define it structure
+```key: <value>```
+
+- Value can be of different types
+    - text: this is generally surrounded with single or double quotes movie: "retro" or movie: 'retro' or movie: retro
+    - numer: This is any number runtime: 130
+    - boolean: This has two values true or false or yes or no theare: no
+    - list/array: this has values of any type in [] actors: ['surya', 'pooja']
+    ```
+    “`yaml
+    actors:</li>
+    <li>surya</li>
+    <li>pooja
+    “`
+    ```
+
+    - map/dictionary/object: this generally represents a complex type which requires more key value pairs to describe. This is surronded with {}
+
+```
+“`yaml
+address:
+flatno: 601-A
+building: nilgiri</li>
+    </ul>
+    “`
+    * Example
+---
+name: Multicloud
+starttime: '19:00'
+topics:
+  - json
+  - yaml
+  - cf
+mode:
+  - online
+  - offline
+where:
+  flat: 601-A
+  building: nilgiri
+  city: Hyberabad
+```
+
+![image](https://github.com/user-attachments/assets/fb918e63-82b7-481a-8c42-439a53c15ee3)
+
+#### Building Blocks of Cloudformation
+- Template: This uses a json or a yaml file in a format defined by aws [Format](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-formats.html)
+- Stack: When we want to create infra, we create a cloudformation stack, where we pass the template. By default stack creates everything or nothing. stacks can be updated to recreate/modify the infrastructure created.
+
+#### Template components
+- [Version](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html)
+- [Parameters](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html)
+- [Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html)
+- [Outputs](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html)
+
+#### Minimial Template
+- This requires only Resources
+
+```
+{
+    "Resources": {
+        "mybucket": {
+            "Type" : "AWS::ServiceName::ResourceType",
+            "Properties" : {
+                "PropertyName1" : "PropertyValue1",
+            }
+
+        }
+    }
+}
+```
+
+#### Lets create a cloudformation template for Network
+- Create a new folder & open in visual studio code
+- Create a new file main.json
+- To find the structure of vpc google aws cloudformation vpc
+![image](https://github.com/user-attachments/assets/0831368f-6c3a-464c-b439-fa30077ceb5f)
+![image](https://github.com/user-attachments/assets/ab54d568-8cc8-4a49-8f1c-7dad960a2918)
+
+- This is our first template
+
+```
+{
+    "Resources": {
+        "network" : {
+            "Type" : "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "192.168.0.0/16",
+                "EnableDnsHostnames": true,
+                "Tags": [{
+                    "Key": "Name",
+                    "Value": "from-cf"
+                }]
+            }
+        }
+    }
+}
+```
+
+- To create a cf stack watch classroom recording
+- To be productive in terms of authoring templates, visual studio code has extensions
+![image](https://github.com/user-attachments/assets/7bc1be53-83a4-453f-a538-6759f41e3604)
+- [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/e28dae6109d1cc22fb54d10449678a1b4d6daff1) for the changes done.
+
+# June 1
+
+### Cloudformation
+
+##### Parameters
+- [Refer Here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) for parameters
+
+##### Functions
+- [Refer Here](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/intrinsic-function-reference.html) for official docs of functions
+- [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/6e26876abd1f5fe34a487afe245cf222035d4805) for changes done
+
+### Azure Resource Manager (ARM) Templates
+- Azure subscriptions will have Resource Providers. Each Resource Provider will have resources.
+- When creating any resources, resource providers do the heavy lifting and create resources.
+- Azure Portal Based creation, end up creating templates by default
+
+![image](https://github.com/user-attachments/assets/a1b40a8f-0dbd-40ae-8ace-13e7c5710364)
+
+- ARM Template Components
+    - [Syntax](https://learn.microsoft.com/bs-latn-ba/azure/azure-resource-manager/templates/syntax)
+- [Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/quickstart-create-templates-use-visual-studio-code?tabs=CLI)
+- Install ARM Tools extension
+
+![image](https://github.com/user-attachments/assets/50f054b9-c8f2-42fe-9737-6a8c02913fe0)
+
+- basic arm template version
+```
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {},
+    "resources": [],
+    "outputs": {}
+}
+```
+
+- [ARM Template functions](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/template-functions)
+- [Refer Here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/copy-resources) for copying i.e. looping
+
+# June 3
+
+## ARM Templates contd
+- [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/8c6181c9249d8c9d2909c0faa3e1ac0b703f6c96) for the changes done so far.
+- Lets create a [nsg](https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group?tabs=network-security-group-portal)
+- [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/a709baac10c7b6ab6a7457c0ed4489b1cbc7c2a4) for changes
+- Now lets add a public ip address [Refer Here](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/publicipaddresses?pivots=deployment-language-arm-template)
+- [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/a44fdb00e055803ca925bf4a8387be4428805cc7) for network interfaces
+- [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/0713a8c7ed59863caee7e3a4691b847d0ddc2ea9) for changes done to add vm.
+
+# June 4
+
+### Azure Bicep
+- [Refer Here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep) for official docs
+- Azure Bicep is infra provisioning tool with a new domain specific language introduced by Microsoft.
+- Install Bicep Extension and getting started with [vscode](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/quickstart-create-bicep-use-visual-studio-code?tabs=azure-cli)
+- [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/8ef8580e4ac38cbae7bc54fa4384b7b5916f6217) for the sample done in the class.
