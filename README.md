@@ -1168,3 +1168,78 @@ where:
 - Azure Bicep is infra provisioning tool with a new domain specific language introduced by Microsoft.
 - Install Bicep Extension and getting started with [vscode](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/quickstart-create-bicep-use-visual-studio-code?tabs=azure-cli)
 - [Refer Here](https://github.com/asquarezone/MultiCloudZone/commit/8ef8580e4ac38cbae7bc54fa4384b7b5916f6217) for the sample done in the class.
+
+# June 5
+
+### AWS – Operations
+- Operations:
+    - Backup
+    - Restore
+    - Archival
+    - Access to Compute
+#### Backup & Restore
+- Terms:
+    - Snapshot: Refers to the backup of a resource at a point in time
+    - Restore: Snapshots can be use to restore the data
+## Activity – 1: Create an ec2 instance and snapshot, restore disks
+- We have create an ec2 instance with 2 ebs volumes (Disk) and mounted as shown below
+
+![image](https://github.com/user-attachments/assets/f174f816-bc9e-4187-9ef7-28d001fdaef2)
+
+- Option 1: Taking back up of disks manually
+- Option 2: Creating Snapshot Lifecycle
+- Option 3:
+    - Create a tag for every disk which requires backup Backup = Enabled
+    - Launch AWS Backup Service
+    - Create/use an vault
+    - Create a backup plan with resources assigned
+
+# June 8
+
+## Backups in Azure
+- Azure also has centralized Backup service
+- Azure has Backup Vaults which are used to store backups and recovery services vaults which also store backups but during failures they can create resources automatically
+- Watch class room video for configuring backups and restoring.
+
+### Controlling Virtual Machines in Azure As Admin
+- Azure Gives options of Extensions, where admins can run the commands, install/configure softwares without having ssh keys
+- Also we have seen how to use instance connect and systems manager run command to acheive the same in AWS
+
+##### Terms
+- Landing Zone
+- Onboarding
+- Centralization:
+    - Backups
+    - Monitoring and Logging
+    - Service availability
+
+# June 9
+
+### AWS Landing Zone
+- AWS Control Tower: To create landing zone
+- AWS Config: Evaulates policies
+- AWS Service Catalog:
+- AWS IAM
+- AWS CloudWatch
+- AWS Cloudtrail
+- AWS SNS
+- AWS Billing
+
+#### Activity – Audit trail
+- 1.Create any thing (s3 bucket, vpc, ….)
+- 2.logout
+- 3.login
+- 4.Delete what you have created
+- 5.Findout How to know who has created/deleted
+
+#### Using AWS Control Tower
+- Ensure you have a new AWS Account and follow the instructions to create a landing zone
+
+![image](https://github.com/user-attachments/assets/00722526-8277-4788-a7f0-08db7b9f69c7)
+
+##### Azure Landing Zones
+
+![image](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/media/alz-design-areas.svg)
+
+![image](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/enterprise-scale/media/azure-landing-zone-architecture-diagram-hub-spoke.svg#lightbox)
+
