@@ -1243,3 +1243,83 @@ where:
 
 ![image](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/enterprise-scale/media/azure-landing-zone-architecture-diagram-hub-spoke.svg#lightbox)
 
+# June 11
+
+### Landing Zone in AWS
+
+![image](https://github.com/user-attachments/assets/a8738434-f5eb-427c-9488-6aaec4e06c68)
+
+#### Landing Zone in Azure
+##### Detailed Steps to Create an Azure Landing Zone Using Bicep
+- 1. Understand the Modular and Layered Approach:
+    -  Azure Landing Zones with Bicep use a modular architecture, where each module encapsulates a core capability (e.g., management groups, networking, policies). Modules are grouped into layers or stages, allowing incremental and flexible deployment[1].
+
+- 2. Prepare Prerequisites:
+    - Azure Subscription: Ensure you have Owner or Contributor access.
+    - Azure CLI & Bicep CLI: Install the latest versions.
+    - Source Code: Clone the official [Azure Landing Zones (ALZ) Bicep repository](https://github.com/Azure/ALZ-Bicep) to get ready-made modules and orchestrators[1][8].
+    - CI/CD Tools (optional): Set up Azure DevOps or GitHub Actions for automated deployments[1].
+
+- 3. Plan Your Landing Zone Design:
+    - Decide on the Topology: Choose between Hub & Spoke, Virtual WAN, or custom network architectures.
+    - Define Management Group Hierarchy: Plan how your subscriptions and resources will be organized (e.g., platform, corp, online management groups)[1].
+    - Select Required Modules: Identify which modules (networking, identity, policies, monitoring, etc.) are needed for your environment.
+
+- 4. Customize Bicep Modules (If Needed)
+    - Parameterization: Adjust parameters in modules for naming, locations, and resource sizing.
+    - Custom Policies/Roles: Modify or add custom policy and role definition modules as per your organizationâ€™s requirements[1].
+    - Orchestrator Modules: Use or customize orchestrator modules to deploy multiple modules in a single step, simplifying complex deployments[1].
+
+- 5. Organize Deployment Layers
+    - Typical layers include:
+        - Core Layer: Management groups, policies, role definitions, subscription placement.
+        - Management Layer: Logging, automation, Sentinel, monitoring.
+        - Connectivity Layer: Networking (VNets, subnets, NSGs).
+        - Identity Layer: Role assignments, managed identities[1].
+        - Each layer can be deployed independently or together, depending on your rollout strategy.
+
+- 6. Deploy the Landing Zone
+    - A. Deploy with Orchestrator Module (Recommended)
+    - Navigate to the orchestrator Bicep file (e.g., main.bicep in the repo).
+    - Use Azure CLI to deploy: sh
+    - az deployment sub create --location --template-file main.bicep --parameters
+    - The orchestrator will handle dependencies and deploy the required modules in the correct order[1][8].
+    
+    - B. Deploy Individual Modules (Advanced/Custom)
+    - Deploy modules one by one, respecting dependencies (e.g., deploy management groups before policies).
+    - Example for deploying a networking module: sh
+    - az deployment sub create --location --template-file ./modules/networking.bicep --parameters
+
+- 7. Validate and Iterate
+    - Check Resources: Confirm that management groups, policies, networks, and other resources are created as expected.
+    - Review Compliance: Ensure policies and security controls are enforced.
+    - Iterate: Modify modules or parameters as your requirements evolve. The modular approach allows you to add or update layers without redeploying the entire landing zone[1].
+
+- 8. Maintain and Extend
+    - Stay Updated: Use the ALZ Bicep Accelerator and its CI/CD pipelines to keep your landing zone in sync with new releases and best practices[1].
+    - Customize Further: Add new modules or layers for additional workloads, environments, or compliance requirements.
+    - Application Landing Zones: Once the platform landing zone is in place, deploy application-specific landing zones under the appropriate management groups for workload teams[1].
+        - Tip: The [ALZ Bicep Accelerator](https://github.com/Azure/ALZ-Bicep) provides step-by-step guidance, automation templates, and branching strategies for managing and customizing your landing zone deployments[1].
+
+#### Summary Table: Core Steps and Actions
+| Step                 | Action                                                                 |
+|----------------------|------------------------------------------------------------------------|
+| Prepare prerequisites| Install tools, clone repo, set up permissions                          |
+| Plan design          | Define architecture, management groups, network topology               |
+| Customize modules    | Adjust parameters, add custom policies/roles                           |
+| Organize layers      | Group modules into logical deployment stages                           |
+| Deploy landing zone  | Use orchestrator or individual module deployments via Azure CLI or CI/CD |
+| Validate and iterate | Review deployed resources, compliance, and update as needed            |
+| Maintain and extend  | Use automation pipelines, keep up with updates, add new modules/layers |
+
+
+##### For more details, refer to the [Azure Landing Zones Bicep documentation](https://learn.microsoft.com/en-us/azure/architecture/landing-zones/bicep/landing-zone-bicep) and the [ALZ Bicep Wiki Deployment Flow](https://github.com/Azure/ALZ-Bicep/wiki/DeploymentFlow)[1][8].
+
+- [1] https://learn.microsoft.com/en-us/azure/architecture/landing-zones/bicep/landing-zone-bicep
+- [2] https://learn.microsoft.com/en-us/azure/architecture/landing-zones/landing-zone-deploy
+- [3] https://learn.microsoft.com/en-us/shows/azure-essentials-show/introduction-to-azure-landing-zones-bicep
+- [4] https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/implementation-options
+- [5] https://azureis.fun/posts/Deploy-Azure-Landing-Zone-with-Azure-Bicep/
+- [6] https://zure.com/blog/azure-landing-zones-in-bicep-part-2/
+- [7] https://zure.com/blog/azure-landing-zones-in-bicep-part-1/
+- [8] https://github.com/Azure/ALZ-Bicep/wiki/DeploymentFlow
