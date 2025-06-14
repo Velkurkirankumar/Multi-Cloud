@@ -1323,3 +1323,39 @@ where:
 - [6] https://zure.com/blog/azure-landing-zones-in-bicep-part-2/
 - [7] https://zure.com/blog/azure-landing-zones-in-bicep-part-1/
 - [8] https://github.com/Azure/ALZ-Bicep/wiki/DeploymentFlow
+
+
+# June 13
+
+## Relational Databases
+#### What does it take to bring up the relational database
+- Create a server
+- install relational database software like mysql
+- configure mysql
+- create necessary users
+
+#### Operational activities
+- User Management
+- Backups and Restorations.
+- Replications
+- Performance Tuning
+- Patching
+    - operating systems
+    - databases
+
+#### What cloud offers
+- Almost everything above apart from
+    - Performance Tuning:
+        - But they provide tools to view query performances
+- Backups: We need to just tell how many days of backup we need
+- In the case of cloud we are responsible of data in database not the other infra.
+- AWS Relational Database services (RDS)
+    - mysql/mariadb
+    - postgres
+    - microsoft sql server
+    - oracle
+    - IBM DB2
+- Azure SQL
+    - microsoft sql server
+    - postgres
+    - mysql/mariadb
