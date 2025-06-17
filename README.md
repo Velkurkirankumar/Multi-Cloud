@@ -1359,3 +1359,43 @@ where:
     - microsoft sql server
     - postgres
     - mysql/mariadb
+
+# June 14
+
+##  Database Types
+- We have two types of General Categorizations
+    - Relational Databases:
+        - can be only vertically scaled and if we need clusters we need to enable replication.
+    - NOSQL Databases: Can be scaled horizontally
+        - Document
+        - Key Value
+        - Graph
+        - Wide Column
+        - Timeseries
+- ![image](https://github.com/user-attachments/assets/ee32266b-f584-4a1b-8934-48f005f19bbc)
+
+- For other info watch classroom recording.
+
+# June 15
+
+## Azure SQL
+- Azure offers SQL Server as Azure SQL which comes in 3 flavors
+    - Azure SQL: PaaS Offering
+        - This is almost equivelent to SQL Server
+        - AzureSQL is not part of your vnet, if you want private connectivity we need add a private endpoint
+
+![image](https://github.com/user-attachments/assets/478bce77-43b2-446c-acfb-739453976c5f)
+
+- Two modes are available
+    - DTU
+    - vCore
+- In addition to Azure SQL has serverless offering
+    - Azure SQL Managed Instance:
+        - This is exact equivelent of SQL Server
+        - Azure SQL Managed instance will be part of your vnet.
+
+### Azure SQL for mysql and Postgres
+- This is database as a service offering for mysql and postgres.
+- Azure SQL for mysql and postgres creates databases in your subnets.
+- Azure SQL calls this flexible server
+
