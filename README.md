@@ -1399,3 +1399,548 @@ where:
 - Azure SQL for mysql and postgres creates databases in your subnets.
 - Azure SQL calls this flexible server
 
+# June 17
+
+#### How is our Home Internet working
+- We have a  router which we can connect to using wifi (ethernet cable)
+
+![image](https://github.com/user-attachments/assets/d954d7eb-4bef-4583-983c-e93722d04723)
+
+- Every device connected to a network gets an ip address
+
+![image](https://github.com/user-attachments/assets/7394c33b-f0b0-4bfb-b022-fa36fc458a3e)
+
+- Principle: A device can connect with any other if they are in same network
+- When we communicate with any device, a stream of network packets are sent out and generally each packet has three things
+    - source
+    - destination
+    - data
+- Router is a device in networking which can forward packets from one network to another, Routers have Route tables which are rules about where the packet has to be forwarded.
+- networking is not good with names, it is good with ip addresses, DNS helps in resolving names to ips
+- DHCP server is responsible for allocating ip addresses to the devices in a network.
+- A Network is considered to be public from the internet i’can connect to this network.
+- Private network generally have ips in the following ranges
+    - 192.168.0.0 to 192.168.255.255
+    - 10.0.0.0 to 10.255.255.255
+    - 172.16.0.0 to 172.31.255.255
+- NAT allows private networks to connect to internet
+
+![image](https://github.com/user-attachments/assets/aee6ac05-3f8f-4b92-b5e3-9e5d7f072cda)
+
+# June 18
+
+#### Networking contd
+## Network
+- Network is used to connect devices
+- Each device in a network gets an unique id which is referred as ip address.
+
+![image](https://github.com/user-attachments/assets/3db1b9f3-b3da-47cc-b5dc-62adb826a86d)
+
+- Ip address = network id + host id
+- There are two schemes of ip addresses
+    - ipv4:
+    - ipv6
+
+![image](https://github.com/user-attachments/assets/f933dc5d-09b3-4b60-997e-82cd4a30c181)
+
+- ipv4 is a 32 bit number divided into 4 equal parts and each part is referred as octet
+```
+X.X.X.X
+range: 0.0.0.0 to 255.255.255.255
+```
+- Lets find network id and host id.
+```
+     1   2  3  4
+ip: 192.168.0.105
+sm: 255.255.255.0
+```
+
+- Network Id: What octets have 255’s in subnet mask => 1, 2, 3. The equivalent in ip
+- ```192.168.0```
+- Host Id: What octects have 0’s in subnet mask => 4
+- ```105```
+- network id is constant/fixed for all devices in a network and hid is unique for every devices
+- Summary
+```
+ip: 192.168.0.105
+sm: 255.255.255.0
+-------------------
+nid: 192.168.0
+hid: 105
+```
+- Size of network is number of hosts which you can connect to a network. the host id is deciding factor
+```
+nework size = 2^ (number of host id bits) - 2
+hid = 1 octet => 8 bits => 2^8 - 2 = 256 -2 = 254
+```
+
+- references
+- [2 power table](https://www.mymathtables.com/numbers/power-exponentiation/power-of-2.html)
+- [binary to decimal converter](https://www.rapidtables.com/convert/number/binary-to-decimal.html)
+- [decimal to binary convertor](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
+- consider the following example and find host id, network id and size of the network
+```
+ip:  172.16.10.17
+sm:  255.255.0.0
+
+nid: 172.16
+hid: 10.17
+
+size = 2^16 -2 = 65536-2 = 65534
+```
+
+- consider the following example
+```
+ip: 10.0.11.12
+sm: 255.0.0.0
+
+nid => 10
+hid: 0.11.12
+
+size => 2^24 - 2 = 16777216 - 2 = 16777214
+```
+- Lets find the subnet mask based on our size needs
+- I need a network to connect 150 devices
+```
+2 ^ n - 2 = Size
+  n => 8,16,24
+
+2^n ~= Size
+2^n  = 150
+ n = 8
+
+SM = 255.255.255.0
+```
+- I need a netowrk to connect 270 devices
+```
+2^n ~= 270
+
+n = 16
+
+SM = 255.255.0.0
+```
+
+- Since this scheme has a chance of creating networks which are way larger than needs, the alternative apporach is to look at SM as bits rather than octets
+- That means network id is number of bits where you will be having continuous 1’s and host id bits where you be having continous 0’s
+- I want a network of 280 devices
+```
+2^n-2 = size
+
+2^n - 2 ~= 280
+n = 9 (number of host id bits)
+total bits = 32
+network id bits = 32 - 9 = 23
+
+SM: 1111111.1111111.1111110.00000000
+```
+
+# June 19
+
+#### CIDR Notation
+- CIDR Notation
+```x.x.x.x/N```
+
+- N = number of network id bits
+- examples
+```
+1. 10.10.0.0/24
+
+N = 24 (24 bits for network id)
+n = 32 -24 = 8 ( 8 bits for host id)
+
+size = 2^n - 2 = 2^8 - 2 = 254
+
+------
+2. 192.168.0.0/22
+
+N = 22
+n = 32 - 22 = 10
+
+size = 2^10 - 2  = 1024 -2 = 1022
+```
+- Private ip ranges: Private ip ranges are fixed
+
+![image](https://github.com/user-attachments/assets/2e7388c5-a0f2-42ac-b8d4-9ab10d85d5f5)
+
+- 192.168.0.0/16
+```
+192.168.0.0/16
+
+N = 16
+n = 32 -16 = 16
+size = 2^16 -2 = 65534
+
+ip =      192.168     .xxxxxxxx.xxxxxxxx
+sip=      192.168     .00000000.00000000  = 192.168.0.0
+eip=      192.168     .11111111.11111111  = 192.168.255.255
+SM = 11111111.11111111.00000000.00000000
+
+range = 192.168.0.0 to 192.168.255.255
+```
+- 10.0.0.0/8
+```
+10.0.0.0/8
+
+N = 8
+n = 32 - 8 = 24
+size = 2^24 -2 = 16777214
+
+ip  =       10.xxxxxxxx.xxxxxxxx.xxxxxxxx/8
+sip =       10.00000000.00000000.00000000 = 10.0.0.0
+eip =       10.11111111.11111111.11111111 = 10.255.255.255
+SM  = 11111111.00000000.00000000.00000000
+
+range = 10.0.0.0 to 10.255.255.255
+```
+
+- 172.16.0.0/12
+```
+172.16.0.0/12
+
+N = 12
+n = 32 - 12 = 20
+
+size = 2^20 -2 = 1048574
+
+ip  = 172.16.0.0/12
+           172.0001xxxx.xxxxxxxx.xxxxxxxx
+sip =      172.00010000.00000000.00000000 = 172.16.0.0
+eip =      172.00011111.11111111.11111111 = 172.31.255.255
+SM  = 11111111.11110000.00000000.00000000
+
+range = 172.16.0.0 to 172.31.255.255
+```
+
+- In any cloud we will be creating private networks
+- Examples
+##### Scenario 1
+- I want to create a network with 500 devices, create a private network
+```
+size = 500
+
+2^n - 2 ~= 500
+2^n  ~= 500
+n = 9 (number of host id bits)
+N = 32 - 9 = 23
+
+options: 172.16.0.0/12
+         192.168.0.0/16
+         10.0.0.0/8
+ip  =  192.168.0.0/23
+    =      192.     168.0000000x.xxxxxxxx
+sip =      192.     168.00000000.00000000 = 192.168.0.0
+eip =      192.     168.00000001.11111111 = 192.168.1.255
+SM  = 11111111.11111111.11111110.00000000
+
+range = 192.168.0.0 to 192.168.1.255
+```
+
+##### Scenario 2
+- I need a private network to connect 25 devices
+- size = 25
+```
+2^n - 2 ~= 25
+n = 5
+N = 32 -5 = 27
+
+ip  = 172.16.0.0/27
+           172.      16.       0.000xxxxx
+sip        172.      16.       0.00000000 = 172.16.0.0
+eip        172.      16.       0.00011111 = 172.16.0.31
+SM  = 11111111.11111111.11111111.11100000
+```
+- Exercise: Try creating private networks of sizes
+- ```600```
+- ```100000```
+
+# June 21
+
+#### Networking contd
+- Private CIDR Ranges
+```
+192.168.0.0/16
+10.0.0.0/8
+172.16.0.0/12
+```
+##### Scenario 3:
+- Create a private network for 100000 devices
+```
+size = 100000
+2^n - 2 ~= 100000
+n = 17
+N = 32 - 17 = 15
+
+ip:        10.0000000x.xxxxxxxx.xxxxxxxx/15
+sip:       10.00000000.00000000.00000000/15 => 10.0.0.0
+eip:       10.00000001.11111111.11111111/15 => 10.1.255.255
+SM:  11111111.11111110.00000000.00000000
+
+range: 10.0.0.0 to 10.1.255.255
+```
+
+#### Subnetting
+- Subnetting involves create subnetworks from network
+##### Example -1
+- In this case we need two subnets of size 500
+
+![image](https://github.com/user-attachments/assets/77b06701-df7f-4b89-bb93-440effce9732)
+
+- Network size and cidr
+```
+size = 1000
+2^n ~= 1000
+n = 10
+N = 22
+
+network cidr = 172.16.0.0/22
+nsm: 11111111.11111111.11111100.00000000
+```
+- for subnet lets find network id bits and host id bits
+```
+2^n ~= 500
+n = 9
+N = 23
+
+ssm: 11111111.11111111.11111110.00000000
+```
+- lets decide subnet ranges
+```
+ip:   172.16.0.0
+nsm:  11111111.11111111.11111100.00000000
+ssm:  11111111.11111111.11111110.00000000
+      ------------------------------------
+                              x
+      -------------------------------------                        
+ip:        172.16       .00000x0.0/23
+s1:        172.16       .0000000.0/23 = 172.16.0.0/23
+s2:        172.16       .0000010.0/23 = 172.16.2.0/23
+```
+
+![image](https://github.com/user-attachments/assets/f87d0fe6-0ab3-4752-bdd7-bf35df977ce9)
+
+##### Example -2
+- Create a network for the following
+
+![image](https://github.com/user-attachments/assets/f536e410-812d-4f01-bb61-f7ee314add14)
+
+- Network size = 4000
+```
+2^n ~= 4000
+n = 12
+N = 20
+
+network: 10.0.0.0/20
+nsm:  11111111.11111111.11110000.00000000
+```
+- subnet size = 1000
+```
+2^n ~= 1000
+n = 10
+N = 22
+ssm:  11111111.11111111.11111100.00000000
+```
+- Lets find individual cidrs of subnet
+```
+nsm:  11111111.11111111.11110000.00000000
+ssm:  11111111.11111111.11111100.00000000
+ip:         10.       0.0000xx00.0/22 
+s1:         10.       0.00000000.0/22 = 10.0.0.0/22
+s2:         10.       0.00000100.0/22 = 10.0.4.0/22
+s3:         10.       0.00001000.0/22 = 10.0.8.0/22 
+s4:         10.       0.00001100.0/22 = 10.0.12.0/22
+```
+
+![image](https://github.com/user-attachments/assets/bcd10ffe-17d9-4545-98fb-d568901e7d60)
+
+##### Example – 3
+- Create a private network with subnet cidrs for the below
+
+![image](https://github.com/user-attachments/assets/13056559-850e-40c0-a0e6-35063b0beede)
+
+- Network: 192.168.0.0/21
+- subnets:
+    - 192.168.0.0/23
+    - 192.168.2.0/23
+    - 192.168.4.0/23
+    - 192.168.6.0/23
+
+#### Example -4
+- Create a private network with 6 subnets of size 100 each
+- network
+```
+2^n ~= 600
+n = 10
+N = 22
+
+ip   192.168.0.0/22
+nsm: 11111111.11111111.11111100.00000000
+```
+- subnet
+```
+2^n ~= 100
+n = 7
+N = 25
+
+ssm: 11111111.11111111.11111111.10000000
+```
+- Subnet cidrs
+```
+nsm: 11111111.11111111.11111100.00000000
+ssm: 11111111.11111111.11111111.10000000
+ip:       192.     168.000000xx.x0000000/25
+s1:       192.     168.00000000.00000000/25 = 192.168.0.0/25
+s1:       192.     168.00000000.10000000/25 = 192.168.0.128/25
+s1:       192.     168.00000001.00000000/25 = 192.168.1.0/25
+s1:       192.     168.00000001.10000000/25 = 192.168.1.128/25
+s1:       192.     168.00000010.00000000/25 = 192.168.2.0/25
+s1:       192.     168.00000010.10000000/25 = 192.168.2.128
+```
+
+- Create a private network with
+    - 16 subnets of 200 devices
+    - 4 subnets of 50000 devices
+
+# June 22
+
+### Networking contd
+##### Examples
+- Create private network 4 subnets with 50000 devices
+```
+size = 200000
+2^n ~= 200000
+n = 18
+N = 14
+
+ip: 172.16.0.0/14
+nsm: 11111111.11111100.00000000.00000000
+```
+- subnets
+```
+size = 50000
+2^n ~= 50000
+n = 16
+
+nsm:  11111111.11111100.00000000.00000000
+ssm:  11111111.11111111.00000000.00000000
+ip:        172.000100xx.0.0/16
+s1:        172.00010000.0.0/16 = 172.16.0.0/16
+s2:        172.00010001.0.0/16 = 172.17.0.0/16
+s3:        172.00010010.0.0/16 = 172.18.0.0/16
+s4:        172.00010011.0.0/16 = 172.19.0.0/16
+```
+#### AWS
+- In AWS all basic networking activities are handle by a service called as VPC (Virtual Private Cloud)
+- At its very core vpc can create a network
+- Core components of vpc
+
+![image](https://github.com/user-attachments/assets/4f1cbecb-cb71-43b7-869f-dcd25f047c38)
+
+- Internet Gateway: This provides dual internet access
+- Egress Gateway: This provides internet access to vpc (similar to home connections)
+- Subnet: This is subnetwork where resources are connected to the network
+- Route table: simulates the router
+- Security Group: kind of a firewall for server
+- Network ACL: kind of firewall for subnet
+- NAT Gateway: when you want to provide internet for private subnets
+- When we create a vpc, AWS creates
+    - a route table which is associated to all subnets and enables all internal communication.
+    - A default security group and default NACL are created.
+- Also aws creates one default vpc in every network.
+
+##### Lets create a vpc with 4 subnets
+- Steps
+
+![image](https://github.com/user-attachments/assets/60a50b1e-3651-4cda-9dfb-e70b4d953482)
+
+![image](https://github.com/user-attachments/assets/b4f470e7-61ca-4d1f-89f9-1007c1fbf0c7)
+
+![image](https://github.com/user-attachments/assets/3042d597-51a6-4f3d-9104-92bfc8b9d0a8)
+
+![image](https://github.com/user-attachments/assets/5f1cadcd-8518-4c01-9cc4-db7d353373fd)
+
+![image](https://github.com/user-attachments/assets/6c7eddf8-afdb-43d2-891c-2d3cbaacf109)
+
+![image](https://github.com/user-attachments/assets/723156f5-1793-4cea-9e9e-bb3ab1014fd6)
+
+#### Principle
+- Two networks cannot be connected if they have common ip addresses
+##### Example
+- Network A has cidr range of 192.168.0.0/24 and network 2 has cidr range 192.168.0.0/16
+- network a = 192.168.0.0 to 192.168.0.255
+- netowrk b = 192.168.0.0 to 192.168.255.255
+- Network A has cidr range of 10.100.100.0/24 and network B has cidr range of 10.100.101.0/24 can they communicate
+- network A = 10.100.100.0 to 10.100.100.255
+- network B = 10.100.101.0 to 10.100.101.255
+##### Exercise:
+- Explore this [website](https://datacenters.microsoft.com/globe/explore/)
+
+# June 23
+
+#### Cloud Infra
+- Generally the top public clouds (AWS,  Azure, GCP) have their own backbone network (Global network)
+- In the Cloud we have Region or a location.
+- Most of the clouds dont run everything at one place in a Region, they atleast find 3 locations 30-40 kms away from each other which are referred as Zones or Availability Zones(AZ).
+- In each of the Zone (AZ) we have many datacenters.
+
+![image](https://github.com/user-attachments/assets/e04a669f-5c12-488f-9723-6f226fb7e8b3)
+
+#### AWS Global Infrastructure
+- AWS has Regions and each region will have atleast 3 availability zones
+#### Azure Global Infrastructure
+- Azure has Regions with Zones and Regions without Zones
+- Zone number is always 3
+#### AWS VPC and Global infra
+- [Region list](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)
+- VPC is created a Region level and subnet is created at an AZ level
+- When we create a vpc for an application which has web servers and possible a database
+
+![image](https://github.com/user-attachments/assets/93108418-0c73-4966-ab63-aa6285d3b235)
+
+- AWS VPC subnets are private by default
+#### Azure Virtual network and Globa infra
+- [Refer Here](https://learn.microsoft.com/en-us/azure/reliability/regions-list#azure-regions-list-1) for list of  azure regions
+- Virtual network is created at a region level and subnet also at region level
+
+![image](https://github.com/user-attachments/assets/008a9229-055b-4574-8439-905a7500265f)
+
+- Azure Vnet subnets are public by default
+##### Lets create a virtual network in Azure
+- Watch classroom recording for steps.
+
+# June 25
+
+### AWS VPC
+- Network = VPC
+- Subnet = Subnet
+- Router = Route table
+- Internet Connection = Internet Gateway | Egress Internet Gateway
+- NAT = NAT Gateway
+#### Create a VPC
+- Consider the following vpc
+
+![image](https://github.com/user-attachments/assets/681e203f-506c-48c3-bbbb-845333dccc7b)
+
+- web-1, web-2 will be different zones & are public subnets
+- db-1,db-2 will be in different zones & are private subnets
+- Note: For screen shots refer classroom video
+- Initially all subnets are private
+- Lets attach internet gateway
+
+![image](https://github.com/user-attachments/assets/36c86291-8b3b-4075-aeec-ae3db12259c6)
+
+- We need to create a route table and associate it with subnets and create a route
+
+![image](https://github.com/user-attachments/assets/43b2abe4-ea16-4870-b10d-55da67c71855)
+
+- We have tried connecting to public instances and using public subnet to connect to private subnet instances
+- Note
+- Networking restrictions are also based on cidr where rules look at network id
+```
+# to restrict a range
+10.100.0.0/16  => 10.100.x.x
+# to restrice a single ip
+10.100.23.25/32 => 10.100.23.25
+# Any ip
+0.0.0.0/0 => x.x.x.x
+```
+
