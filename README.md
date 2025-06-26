@@ -1944,3 +1944,25 @@ s4:        172.00010011.0.0/16 = 172.19.0.0/16
 0.0.0.0/0 => x.x.x.x
 ```
 
+# June 26
+### AWS Networking
+- Enabling internet access for private networks
+- In AWS, we have a NAT Gateway, which can enable internet access to private subnets
+
+![image](https://i0.wp.com/directdevops.blog/wp-content/uploads/2025/06/network25.png?w=750&ssl=1)
+
+- Watch classroom recording for creation steps
+
+#### Azure Network
+- Lets create similar stuff in Azure, with all public subnets
+- All machines in subnet get internet by default
+- If you want the subnet to be private, we need to create a private subnet
+- Watch classroom recording
+
+##### Network Connectivity between VPCs in AWS
+- Overview
+
+![image](https://i0.wp.com/directdevops.blog/wp-content/uploads/2025/06/network26.png?w=750&ssl=1)
+
+- Establishing private connectivity with in same cloud is referred as peering.
+- [Refer Here](https://learn.microsoft.com/en-us/azure/virtual-network/tutorial-connect-virtual-networks?tabs=portal) for Azure Vnet peering
